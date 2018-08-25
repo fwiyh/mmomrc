@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ja">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Material Requirements Calculator</title>
+	<link rel="stylesheet" href="./lib/css/jquery-ui.min.css" />
+	<link rel="stylesheet" href="./lib/css/bootstrap.min.css" />
+	<script src="./lib/js/jquery-3.3.1.min.js"></script>
+	<script src="./lib/js/bootstrap.min.js"></script>
+	<script src="./lib/js/popper.min.js"></script>
+	<script src="./lib/js/jquery-ui.min.js"></script>
+	<script src="./usr/js/common.js"></script>
+	<script src="./usr/js/MRCalc.js"></script>
+	<script src="./usr/js/index.js"></script>
+</head>
+<body>
+<div class="container">
+	<div class="row">
+		<h1>素材計算機</h1>
+	</div>
+
+	<!-- タブ -->
+	<ul class="nav nav-tabs mt-3">
+		<li id="CategoryTab_-1" class="nav-item" style="display: none;">
+			<a href="#TabContent_-1" class="nav-link" data-toggle="tab"></a>
+		<li>
+	</ul>
+	<!-- タブの内容 -->
+	<div id="ProductTabContents" class="tab-content mb-3">
+		<div id="TabContent_-1" class="tab-pane mt-3" style="display: none;">
+			<div class="row">
+				<div class="selectedProduct col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-3" style="display: none;">
+					<div class="card box-shadow m-1">
+						<div class="card-header productName"></div>
+						<div class="card-body">
+							<div class="box" style="text-align: right;">
+								<!-- imageの予定-->
+								<input type="text" name="productQuantity" value="1" style="width: 100%;"/>
+								<input type="hidden" class="productId" />
+							</div>
+							<button type="button" class="btn btn-primary btn-block calc">計算</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- modal -->
+<div class="modal fade" id="RequiredModal" tabindex="-1" role="dialog" aria-labelledby="ModalTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<!-- title -->
+				<div id="ModalTitle" class="modal-title h3"></div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="container">
+					<div class="row">
+						<div id="TotalRequired" style="display: none;">
+							<div class="h4">素材必要量</div>
+							<ul>
+								<li id="TotalResource_-1" style="display: none;">
+									<span class="resourceId" style="display: none;"></span>
+									<span class="resourceName"></span>
+									<span class="resourceQuantity"></span>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="row">
+						<div id="MaterialTree" style="display: none;">
+							<div class="h4">素材ツリー</div>
+							<ul id="Resource_0" class="parent_0"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- template -->
+<div id="TreeTemplate" style="display: none;">
+	<li class="singleList" style="display: none;">
+		<span class="resourceName"></span>
+		<span class="resourceQuantity"></span>
+	</li>
+	<li class="childrenList" style="display: none;">
+		<a href="javascript:void(0);" class="resourceName"></a>
+		<span class="resourceQuantity"></span>
+		<ul style="display: none;">
+		</ul>
+	</li>
+</div>
+
+<footer class="footer">
+	<div class="container">
+		<span class="text-muted">このデータは・・・</span>
+	</div>
+</footer>
+</body>
+</html>
