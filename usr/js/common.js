@@ -1,6 +1,6 @@
 var MRConfig = function(){
 	this.brtag = "<br />";
-	this.spaceString = "&nbsp;";
+	this.spaceString = " ";
 	this.copyright = [
 		"(c) Ngine Studios. All Rights Reserved.",
 		"(c) WeMade Online Co., Ltd. All Rights Reserved.",
