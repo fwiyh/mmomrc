@@ -10,6 +10,7 @@ var MRConfig = function(){
 	this.categories = [
 		{"id": "cooking", "name": "料理"},
 		{"id": "material", "name": "素材"},
+		{"id": "blueprint", "name": "図面"},
 		{"id": "furniture", "name": "家具"}
 	];
 }
