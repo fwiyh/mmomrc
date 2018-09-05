@@ -121,7 +121,6 @@ $(function(){
 		);
 
 		// 総量の取得
-		// var totalArr = getTotalRequires(retArr);
 		var totalArr = mRCalc.getTotalRequired();
 		for (var i = 0; i < totalArr.length; i++){
 			copyTotalResult(totalArr[i], i);
