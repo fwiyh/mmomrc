@@ -5,6 +5,8 @@ var MRCalc = function(dataPath){
 	this.requiredResources = [];
 	// 要求量（総量）データ
 	this.totalRequiredResources = [];
+	// 利用素材データ
+	this.usingProducts = [];
 	// コンストラクト
 	this.__constract(dataPath);
 }
@@ -37,6 +39,9 @@ MRCalc.prototype.getRequired = function(){
 }
 MRCalc.prototype.getTotalRequired = function(){
 	return this.totalRequiredResources;
+}
+MRCalc.prototype.getUsingProducts = function(){
+	return this.usingProducts;
 }
 
 // 指定タイプのみ取得
@@ -92,6 +97,31 @@ MRCalc.prototype.calc = function(productId, quantity){
 			break;
 		}
 		layer++;
+	}
+}
+
+/**
+ * 逆引き検索
+ * @param {*} productId 
+ */
+MRCalc.prototype.reverseSearch = function(productId){
+
+	// リセット
+	this.usingProducts = [];
+	
+	for (var i = 0; i < this.resourceData.length; i++){
+		var material = this.resourceData[i]["material"];
+		for (var j = 0; j < material.length; j++){
+			if (material[j]["id"] == productId){
+				var retArr = {
+					"id": this.resourceData[i]["id"], 
+					"type": this.resourceData[i]["type"], 
+					"name": this.resourceData[i]["name"],
+					"quantity": material[j]["quantity"]
+				};
+				this.usingProducts.push(retArr);
+			}
+		}
 	}
 }
 

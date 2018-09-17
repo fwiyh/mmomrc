@@ -13,6 +13,13 @@ var MRConfig = function(){
 		{"id": "blueprint", "name": "図面"},
 		{"id": "furniture", "name": "家具"}
 	];
+	this.reverseCategories = [
+		{"id": "resource", "name": "フィールド"},
+		{"id": "salesItem", "name": "店売り"},
+		{"id": "cooking", "name": "料理"},
+		{"id": "material", "name": "材料"},
+		{"id": "blueprint", "name": "図面"}
+	];
 }
 
 // accessor copyright
@@ -26,4 +33,8 @@ MRConfig.prototype.getCategories = function(){
 // accessor json data path
 MRConfig.prototype.getDataPath = function(){
 	return this.resourcePath;
+}
+// accessor reverse resolution categories
+MRConfig.prototype.getReverseCategories = function(){
+	return this.reverseCategories;
 }
