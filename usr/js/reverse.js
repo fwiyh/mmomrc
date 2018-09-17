@@ -1,4 +1,11 @@
 $(function(){
+	// param
+	var QS_KEY_PRODUCT_ID = "id";
+
+	// chrome向けurl取得
+	var currentPath = location.pathname;
+
+	var utils = new Utils();
 	var mRConfig = new MRConfig();
 	var categories = mRConfig.getReverseCategories();
 	var copyright = mRConfig.getCopyright();
@@ -32,17 +39,78 @@ $(function(){
 	$("div[id^=SelectedProduct_] button.search").on(
 		"click",
 		function(){
-			var productName = $(this).parent().parent().parent().find(".productName").text();
 			var productId = $(this).parent().find(".productId").val();
-			calcMaterial(productId);
-
-			// modalの展開
-			$("#ModalTitle").text(productName);
-			$("#RequiredModal").modal("show");
+			// url変更処理
+			history.pushState(
+				{}, 
+				null, 
+				"?" 
+				+ QS_KEY_PRODUCT_ID + "=" + productId
+			);
+			// 計算処理を実行
+			calcEvent();
 		}
 	);
 
-	// コンテンツの出力
+	// onLoadでURI解析
+	$(document).ready(
+		function(){
+			calcEvent();
+		}
+	);
+
+	// モーダル設定
+	$("#RequiredModal").on(
+		"hide.bs.modal",
+		function(e){
+			window.history.replaceState(
+				null, 
+				null, 
+				currentPath + "?"
+			);
+		}
+	);
+
+	/**
+	 * 計算処理
+	 * @param {*} productId 
+	 */
+	function calcEvent(productId){
+		// urlからパラメータを取得
+		var u = $(location).prop("href");
+		var params = utils.getQueryString(u);
+		// パラメータの取得
+		var productId = params[QS_KEY_PRODUCT_ID];
+		// idがない場合は処理を行わない
+		if (!(QS_KEY_PRODUCT_ID in params)){
+			return;
+		}
+		// idから名称を取得
+		var productName = $("input.productId[value=" + productId + "]")
+							.parent().parent().parent().find("div.productName").text();
+
+		// 属するタブを取得してアクティブにする
+		var tabContentId = $("input.productId[value=" + productId + "]")
+							.parent().parent().parent().parent().parent().parent()
+							.attr("id");
+		// タブコンテンツのid名をタブのidに置き換える
+		var tabId = tabContentId.replace(/^TabContent\_/g, "CategoryTab_");
+		// bootstrapのタブ機能で表示を変える
+		$("#" + tabId + " a").tab("show");
+
+		// 計算処理を実行
+		calcMaterial(productId);
+
+		// modalの展開
+		$("#ModalTitle").text(productName);
+		$("#RequiredModal").modal("show");
+	}
+
+	/**
+	 * カテゴリータブの表示とタブ内コンテンツの出力
+	 * @param {*} targetType 
+	 * @param {*} num 
+	 */
 	function getCategoryContents(targetType, num){
 		// 内容の領域を作成
 		$("#TabContent_-1")
