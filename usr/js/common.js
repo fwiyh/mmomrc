@@ -11,11 +11,13 @@ var MRConfig = function(){
 		{"id": "cooking", "name": "料理"},
 		{"id": "material", "name": "素材"},
 		{"id": "blueprint", "name": "図面"},
-		{"id": "furniture", "name": "家具"}
+		{"id": "furniture", "name": "家具"},
+		{"id": "costume", "name": "衣装"}
 	];
 	this.reverseCategories = [
 		{"id": "resource", "name": "フィールド"},
 		{"id": "salesItem", "name": "店売り"},
+	    {"id": "dungeonDrop", "name": "ダンジョンドロップ"},
 		{"id": "cooking", "name": "料理"},
 		{"id": "material", "name": "材料"},
 		{"id": "blueprint", "name": "図面"}
