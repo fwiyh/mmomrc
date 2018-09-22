@@ -1,4 +1,12 @@
 $(function(){
+	// param
+	var QS_KEY_PRODUCT_ID = "id";
+	var QS_KEY_QUANTITY = "q";
+
+	// chrome向けurl取得
+	var currentPath = location.pathname;
+	
+	var utils = new Utils();
 	var mRConfig = new MRConfig();
 	var categories = mRConfig.getCategories();
 	var copyright = mRConfig.getCopyright();
@@ -41,21 +49,87 @@ $(function(){
 	$("div[id^=SelectedProduct_] button.calc").on(
 		"click",
 		function(){
-			var productName = $(this).parent().parent().parent().find(".productName").text();
 			var productId = $(this).parent().find(".productId").val();
 			var productQuantity = $(this).parent().find("input[name=productQuantity]").val();
-			if (!isFinite(productQuantity)){
-				productQuantity = 1;
-			}
-			calcMaterial(productId, productQuantity);
-
-			// modalの展開
-			$("#ModalTitle").text(productName + "(数量：" + productQuantity + ")");
-			$("#RequiredModal").modal("show");
+			// url変更処理
+			history.pushState(
+				{}, 
+				null, 
+				"?" 
+				+ QS_KEY_PRODUCT_ID + "=" + productId
+				+ "&"
+				+ QS_KEY_QUANTITY + "=" + productQuantity
+			);
+			// 計算処理を実行
+			calcEvent();
 		}
 	);
 
-	// コンテンツの出力
+	// onLoadでURI解析
+	$(document).ready(
+		function(){
+			calcEvent();
+		}
+	);
+	
+	// モーダル設定
+	$("#RequiredModal").on(
+		"hide.bs.modal",
+		function(e){
+			window.history.replaceState(
+				null, 
+				null, 
+				currentPath + "?"
+			);
+		}
+	);
+
+	/**
+	 * 計算処理
+	 * @param {*} productId 
+	 * @param {*} productQuantity 
+	 */
+	function calcEvent(productId, productQuantity){
+		// urlからパラメータを取得
+		var u = $(location).prop("href");
+		var params = utils.getQueryString(u);
+		// パラメータの取得
+		var productId = params[QS_KEY_PRODUCT_ID];
+		var productQuantity = params[QS_KEY_QUANTITY];
+		// idがない場合は処理を行わない
+		if (!(QS_KEY_PRODUCT_ID in params)){
+			return;
+		}
+		// 有限値でなければ1とみなす
+		if (!isFinite(productQuantity)){
+			productQuantity = 1;
+		}
+		// idから名称を取得
+		var productName = $("input.productId[value=" + productId + "]")
+							.parent().parent().parent().find("div.productName").text();
+
+		// 属するタブを取得してアクティブにする
+		var tabContentId = $("input.productId[value=" + productId + "]")
+							.parent().parent().parent().parent().parent().parent()
+							.attr("id");
+		// タブコンテンツのid名をタブのidに置き換える
+		var tabId = tabContentId.replace(/^TabContent\_/g, "CategoryTab_");
+		// bootstrapのタブ機能で表示を変える
+		$("#" + tabId + " a").tab("show");
+
+		// 計算処理を実行
+		calcMaterial(productId, productQuantity);
+
+		// modalの展開
+		$("#ModalTitle").text(productName + "(数量：" + productQuantity + ")");
+		$("#RequiredModal").modal("show");
+	}
+
+	/**
+	 * カテゴリータブの表示とタブ内コンテンツの出力
+	 * @param {*} targetType 
+	 * @param {*} num 
+	 */
 	function getCategoryContents(targetType, num){
 		// 内容の領域を作成
 		$("#TabContent_-1")
