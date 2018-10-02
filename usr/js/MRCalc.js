@@ -155,7 +155,7 @@ MRCalc.prototype._getRequired = function(material, number, pos, layer){
 			{
 				"id": id,
 				"name": name,
-				"pos": id + "_" + pos + "_" + layer,
+				"pos": pos + "_" + id + "_" + layer,
 				"parentPos": pos,
 				"quantity": quantity,
 				"total": quantity * number,
