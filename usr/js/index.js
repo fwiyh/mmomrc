@@ -4,7 +4,7 @@ $(function(){
 	var QS_KEY_QUANTITY = "q";
 
 	// chrome向けurl取得
-	var currentPath = location.pathname;
+	var currentPath = location.href;
 	
 	var utils = new Utils();
 	var mRConfig = new MRConfig();
@@ -76,10 +76,10 @@ $(function(){
 	$("#RequiredModal").on(
 		"hide.bs.modal",
 		function(e){
-			window.history.replaceState(
+			window.history.pushState(
 				null, 
 				null, 
-				currentPath + "?"
+				currentPath
 			);
 		}
 	);
@@ -218,6 +218,9 @@ $(function(){
 				.clone(true)
 				.appendTo("#Resource_" + resource["parentPos"])
 				.prop("id", "Resource_" + resource["pos"]);
+			// 結果の投入
+			$("#Resource_" + resource["pos"]).find(".resourceName").text(resource["name"]);
+			$("#Resource_" + resource["pos"]).find(".resourceQuantity").text(total);
 		}else {
 			$("#TreeTemplate .childrenList")
 				.clone(true)
@@ -225,13 +228,11 @@ $(function(){
 				.prop("id", "ParentList_" + resource["pos"]);
 			// ulにidを付与
 			$("#ParentList_" + resource["pos"] + " ul").prop("id", "Resource_" + resource["pos"]);
+			// 結果の投入
+			$("#ParentList_" + resource["pos"]).find(".resourceName").text(resource["name"]);
+			$("#ParentList_" + resource["pos"]).find(".resourceQuantity").text(total);
 		}
 
-		// 結果の投入
-		$("#Resource_" + resource["pos"]).find(".resourceName").text(resource["name"]);
-		$("#Resource_" + resource["pos"]).find(".resourceQuantity").text(total);
-		$("#ParentList_" + resource["pos"]).find(".resourceName").text(resource["name"]);
-		$("#ParentList_" + resource["pos"]).find(".resourceQuantity").text(total);
 	}
 
 	/**

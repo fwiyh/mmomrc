@@ -3,7 +3,7 @@ $(function(){
 	var QS_KEY_PRODUCT_ID = "id";
 
 	// chrome向けurl取得
-	var currentPath = location.pathname;
+	var currentPath = location.href;
 
 	var utils = new Utils();
 	var mRConfig = new MRConfig();
@@ -52,6 +52,14 @@ $(function(){
 		}
 	);
 
+	// URI変更イベント（戻るボタン機能）の設置
+	$(window).on(
+		"popstate", 
+		function(e){
+			calcEvent();
+		}
+	);
+
 	// onLoadでURI解析
 	$(document).ready(
 		function(){
@@ -63,10 +71,10 @@ $(function(){
 	$("#RequiredModal").on(
 		"hide.bs.modal",
 		function(e){
-			window.history.replaceState(
+			window.history.pushState(
 				null, 
 				null, 
-				currentPath + "?"
+				currentPath
 			);
 		}
 	);
@@ -83,6 +91,8 @@ $(function(){
 		var productId = params[QS_KEY_PRODUCT_ID];
 		// idがない場合は処理を行わない
 		if (!(QS_KEY_PRODUCT_ID in params)){
+			// modalを消す
+			$("#RequiredModal").modal("hide");
 			return;
 		}
 		// idから名称を取得
@@ -159,6 +169,24 @@ $(function(){
 		for (var i = 0; i < retArr.length; i++){
 			copyResult(retArr[i], i);
 		}
+
+		// 計算イベントの設置
+		$("ul#RequiredList li[id^=TotalResource_] a").on(
+			"click",
+			function(){
+				var productId = $(this).parent().find(".resourceId").text();
+				// url変更処理
+				history.pushState(
+					{}, 
+					null, 
+					"?" 
+					+ QS_KEY_PRODUCT_ID + "=" + productId
+				);
+				// 計算処理を実行
+				calcEvent();
+			}
+		);
+
 		$("#TotalRequired").show();
 	}
 
@@ -166,12 +194,20 @@ $(function(){
 	 * 取得した素材（総量）の転記
 	 */
 	function copyResult(resource, incount){
-		$("#TotalResource_-1").clone(true).insertAfter("#TotalResource_" + parseInt(incount-1)).prop("id", "TotalResource_" + incount);
+		$("#TotalResource_-1").clone(true).appendTo("#RequiredList").prop("id", "TotalResource_" + incount);
 		// 結果の投入
 		$("#TotalResource_" + incount).find("span.resourceId").text(resource["id"]);
 		$("#TotalResource_" + incount).find("span.resourceType").text(resource["type"]);
-		$("#TotalResource_" + incount).find("span.resourceName").text(resource["name"]);
 		$("#TotalResource_" + incount).find("span.resourceQuantity").text(resource["quantity"]);
+		
+		// 逆引き可能の場合はリンクを設置
+		if ($("div[id^=TabContent_] input.productId[value=" + resource["id"] + "]").length > 0){
+			$("#TotalResource_" + incount).find("a.resourceName").text(resource["name"]);
+			$("#TotalResource_" + incount).find("a.resourceName").show();
+		}else {
+			$("#TotalResource_" + incount).find("span.resourceName").text(resource["name"]);
+			$("#TotalResource_" + incount).find("span.resourceName").show();
+		}
 
 		$("#TotalResource_" + incount).show();
 	}
