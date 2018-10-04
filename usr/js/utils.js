@@ -3,7 +3,9 @@ var Utils = function(){
 
 Utils.prototype.getQueryString = function(url){
 	var ret = {};
-	var urlQs = url.split("?");
+	// #の除去
+	var urlNoHash = url.split("#");
+	var urlQs = urlNoHash[0].split("?");
 	if (urlQs.length > 1){
 		// パラメータ単位で配列に渡す
 		var params = urlQs[1].split("&");
